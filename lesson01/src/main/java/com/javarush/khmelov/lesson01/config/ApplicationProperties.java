@@ -2,6 +2,7 @@ package com.javarush.khmelov.lesson01.config;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.FileReader;
@@ -11,8 +12,9 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
 
-@Component
+
 @Slf4j
+@Component
 public class ApplicationProperties extends Properties {
 
     public static final String HIBERNATE_CONNECTION_URL = "hibernate.connection.url";
@@ -21,11 +23,13 @@ public class ApplicationProperties extends Properties {
     public static final String HIBERNATE_CONNECTION_DRIVER_CLASS = "hibernate.connection.driver_class";
 
     @SneakyThrows
-    public ApplicationProperties() {
-        this.load(new FileReader(CLASSES_ROOT + "/application.properties"));
+    public ApplicationProperties(
+            @Value("${path.application}") String path,
+            @Value("${hibernate.connection.driver_class}") String driver
+    ) {
+        this.load(new FileReader(CLASSES_ROOT + path));
         injectEnvironmentVariables();
         try {
-            String driver = this.getProperty(HIBERNATE_CONNECTION_DRIVER_CLASS);
             Class.forName(driver);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

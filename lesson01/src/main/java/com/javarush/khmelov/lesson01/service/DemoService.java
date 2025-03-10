@@ -4,7 +4,6 @@ import com.javarush.khmelov.lesson01.repository.DemoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
 @AllArgsConstructor
 public class DemoService {
 
