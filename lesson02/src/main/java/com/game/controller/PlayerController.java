@@ -67,7 +67,7 @@ public class PlayerController {
                 minExperience, maxExperience, minLevel, maxLevel);
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<PlayerInfo> createPlayer(@RequestBody PlayerInfo info) {
         if (StringUtils.isEmpty(info.name) || info.name.length() > 12) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         if (info.title.length() > 30) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
