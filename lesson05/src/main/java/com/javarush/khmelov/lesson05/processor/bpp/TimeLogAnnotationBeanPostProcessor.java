@@ -1,13 +1,14 @@
-package com.javarush.khmelov.lesson04.processor.bpp;
+package com.javarush.khmelov.lesson05.processor.bpp;
 
-import com.javarush.khmelov.lesson04.config.SessionCreator;
-import com.javarush.khmelov.lesson04.processor.annotation.Tx;
+import com.javarush.khmelov.lesson05.processor.annotation.TimeLog;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Constructor;
@@ -16,19 +17,26 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Component
 @AllArgsConstructor
-public class TxBeanAnnotationPostProcessor implements BeanPostProcessor {
+public class TimeLogAnnotationBeanPostProcessor implements BeanPostProcessor, ApplicationContextAware {
 
-    public static final Class<Tx> ANNOTATION_CLASS = Tx.class;
+    public static final Class<TimeLog> ANNOTATION_CLASS = TimeLog.class;
     private final Map<String, Class<?>> realClassesWithAnnotation = new ConcurrentHashMap<>();
-    private final ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
+
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        Class<?> aClass = bean.getClass();
-        if (isAnnotationPresent(aClass)) {
-            realClassesWithAnnotation.put(beanName, aClass);
+        Class<?> beanClass = bean.getClass();
+        if (isAnnotationPresent(beanClass)) {
+            realClassesWithAnnotation.put(beanName, beanClass);
         }
         return bean;
     }
@@ -36,7 +44,8 @@ public class TxBeanAnnotationPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (realClassesWithAnnotation.containsKey(beanName)) {
-            return proxy(bean, realClassesWithAnnotation.get(beanName));
+            Class<?> beanRealClass = realClassesWithAnnotation.get(beanName);
+            return proxy(bean, beanRealClass);
         }
         return bean;
     }
@@ -53,10 +62,12 @@ public class TxBeanAnnotationPostProcessor implements BeanPostProcessor {
             if (beanRealClass.isAnnotationPresent(ANNOTATION_CLASS)
                 || method.isAnnotationPresent(ANNOTATION_CLASS)
             ) {
-                SessionCreator sessionCreator = applicationContext.getBean(SessionCreator.class);
-                sessionCreator.beginTransactional();
+                long startTime = System.nanoTime();
+                log.info("==  {} {} started ==\n", ANNOTATION_CLASS.getSimpleName(), method.getName());
                 result = proxy.invoke(beanOrProxy, args);
-                sessionCreator.endTransactional();
+                long endTime = System.nanoTime();
+                double milliseconds = (endTime - startTime) / 1_000_000.0;
+                log.info("==  {} {} started == complete {} ms==\n", ANNOTATION_CLASS.getSimpleName(), method.getName(), milliseconds);
                 return result;
             } else {
                 return proxy.invoke(beanOrProxy, args);
@@ -80,5 +91,6 @@ public class TxBeanAnnotationPostProcessor implements BeanPostProcessor {
                 .toArray();
         return enhancer.create(constructor.getParameterTypes(), paramBeans);
     }
+
 
 }

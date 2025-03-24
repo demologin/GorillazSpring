@@ -1,7 +1,7 @@
-package com.javarush.khmelov.lesson04.processor.bpp;
+package com.javarush.khmelov.lesson05.processor.bpp;
 
-import com.javarush.khmelov.lesson04.config.SessionCreator;
-import com.javarush.khmelov.lesson04.processor.annotation.Tx;
+import com.javarush.khmelov.lesson05.config.SessionCreator;
+import com.javarush.khmelov.lesson05.processor.annotation.Tx;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
