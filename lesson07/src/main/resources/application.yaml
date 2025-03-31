@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: lesson06
+  datasource:
+    url: jdbc:postgresql://localhost:5432/game
+    username: postgres
+    password: postgres
+  jpa:
+    show-sql: true
+
+
+
+
+
+com.javarush.integer: 10
+com.javarush.str: Hello
+com.javarush.longs: 1,2,3,4,6
+com.javarush.set: One,Two
+com.javarush.map.1: ONE;
+com.javarush.map.2: TWO;
+com.javarush.on-user-service: true
