@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}">
+    <title>Редакторы</title>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <!-- Сообщения об ошибках -->
+    <!-- Сообщения об ошибках -->
+    <div th:if="${errors != null && #fields.hasErrors('*')}" class="alert alert-danger">
+        <strong>Ошибка!</strong> Пожалуйста, исправьте следующие ошибки:
+        <ul th:each="error : ${#fields.errors('*')}" class="list-unstyled">
+            <li th:text="${error}">Сообщение об ошибке</li>
+        </ul>
+    </div>
+
+    <!-- Форма создания/редактирования -->
+    <form th:object="${editor}" method="POST" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="login">Имя пользователя:</label>
+            <input type="text" id="login" th:field="*{login}"
+                   class="form-control" required>
+            <span th:if="${#fields.hasErrors('login')}"
+                  th:errors="*{login}" class="invalid-feedback d-block">
+                    Ошибка в логине
+                </span>
+        </div>
+
+        <div class="mb-3">
+            <label for="password">Password:</label>
+            <input type="password" id="password" th:field="*{password}"
+                   class="form-control" required>
+            <span th:if="${#fields.hasErrors('password')}"
+                  th:errors="*{password}" class="invalid-feedback d-block">
+                    Ошибка в пароле
+                </span>
+        </div>
+
+        <div class="mb-3">
+            <label for="firstname">Firstname:</label>
+            <input type="text" id="firstname" th:field="*{firstname}"
+                   class="form-control" required>
+            <span th:if="${#fields.hasErrors('firstname')}"
+                  th:errors="*{firstname}" class="invalid-feedback d-block">
+                    Ошибка в имени пользователя
+                </span>
+        </div>
+
+        <div class="mb-3">
+            <label for="lastname">Firstname:</label>
+            <input type="text" id="lastname" th:field="*{lastname}"
+                   class="form-control" required>
+            <span th:if="${#fields.hasErrors('lastname')}"
+                  th:errors="*{lastname}" class="invalid-feedback d-block">
+                    Ошибка в фамилии пользователя
+                </span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Сохранить
+        </button>
+        <a th:href="@{/editors}" class="btn btn-secondary ml-2">
+            Отмена
+        </a>
+    </form>
+</div>
+</body>
+</html>

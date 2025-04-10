@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}">
+    <title>Редакторы</title>
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <!-- Фильтрация -->
+    <form th:object="${editorFilter}" class="mb-4">
+        <div class="row">
+            <div class="col-md-4 mb-2">
+                <label for="login">Login пользователя:</label>
+                <input type="text" id="login" th:field="*{login}"
+                       class="form-control" placeholder="Введите login...">
+            </div>
+            <div class="col-md-4 mb-2">
+                <label for="lastname">Фамилия:</label>
+                <input type="text" id="lastname" th:field="*{lastname}"
+                       class="form-control" placeholder="Введите lastname...">
+            </div>
+            <div class="col-md-4 mb-2">
+                <label for="firstname">Фамилия:</label>
+                <input type="text" id="firstname" th:field="*{firstname}"
+                       class="form-control" placeholder="Введите firstname...">
+            </div>
+            <div class="col-md-4 align-self-end">
+                <button type="submit" class="btn btn-primary w-100">Фильтровать</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Сообщения -->
+    <div th:if="${message}" class="alert alert-success" role="alert">
+        <strong>Успех!</strong> <span th:text="${message}"></span>
+    </div>
+
+    <!-- Список редакторов -->
+    <div th:unless="${#lists.isEmpty(editors)}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Имя пользователя</th>
+                <th>Email</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="editor : ${editors}">
+                <td th:text="${editor.firstname}">Имя пользователя</td>
+                <td th:text="${editor.login}">Email</td>
+                <td>
+                    <a th:href="@{/editors/{id}(id=${editor.id})}" class="btn btn-sm btn-primary">
+                        Просмотр
+                    </a>
+                    <a th:href="@{/editors/{id}/edit(id=${editor.id})}" class="btn btn-sm btn-warning">
+                        Редактировать
+                    </a>
+                    <form th:action="@{/editors/{id}/delete(id=${editor.id})}" method="post" style="display: inline-block;">
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Удалить редактора?')">
+                            Удалить
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Пагинация ???? -->
+    </div>
+
+    <!-- Сообщение если список пуст -->
+    <div th:if="${#lists.isEmpty(editors)}" class="alert alert-info">
+        Редакторы не найдены. Создайте нового редактора.
+    </div>
+
+    <!-- Кнопка создания нового редактора -->
+    <a th:href="@{/editors/new}" class="btn btn-success mt-4">
+        Создать нового редактора
+    </a>
+</div>
+</body>
+</html>
