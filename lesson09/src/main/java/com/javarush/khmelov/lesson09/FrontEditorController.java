@@ -3,6 +3,7 @@ package com.javarush.khmelov.lesson09;
 import com.javarush.khmelov.model.editor.Editor;
 import com.javarush.khmelov.service.EditorService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -33,8 +34,7 @@ public class FrontEditorController {
     public String getAllEditors(
             Model model,
             @SessionAttribute(required = false) Editor.In editorFilter,
-            @ModelAttribute Editor.In editorFilterForm,
-            HttpSession httpSession
+            @ModelAttribute Editor.In editorFilterForm
     ) {
         if (isEmpty(editorFilter) || !isEmpty(editorFilterForm)) {
             editorFilter = editorFilterForm;
