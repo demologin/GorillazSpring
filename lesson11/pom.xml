@@ -67,5 +67,29 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <version>1.45.1</version>
+            <scope>test</scope>
+            <!-- Using ex:
+            Playwright playwright = Playwright.create();
+            BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions();
+            launchOptions.setHeadless(false);
+            Browser browser = playwright.chromium().launch(launchOptions);
+            try (playwright; browser) {
+                BrowserContext context = browser.newContext(new Browser.NewContextOptions());
+                Page page = context.newPage();
+                page.navigate(login_page);
+                page.waitForLoadState();
+                var timeout = new Page.WaitForSelectorOptions().setTimeout(5_000);
+                page.waitForSelector(email_field,timeout).fill(emailValue);
+                page.waitForSelector(password_field).fill(passwordValue);
+                page.waitForSelector(button_submit).click();
+                // ...... and so on ......
+                }
+            -->
+        </dependency>
+
     </dependencies>
 </project>
