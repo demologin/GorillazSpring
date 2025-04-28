@@ -1,4 +1,4 @@
-package com.javarush.lesson13.entity;
+package com.javarush.lesson14.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

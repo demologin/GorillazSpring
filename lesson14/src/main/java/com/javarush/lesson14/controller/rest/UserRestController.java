@@ -1,7 +1,7 @@
-package com.javarush.lesson13.controller.rest;
+package com.javarush.lesson14.controller.rest;
 
-import com.javarush.lesson13.dto.UserTo;
-import com.javarush.lesson13.service.UserService;
+import com.javarush.lesson14.dto.UserTo;
+import com.javarush.lesson14.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
-package com.javarush.lesson13.map;
+package com.javarush.lesson14.map;
 
-import com.javarush.lesson13.dto.UserTo;
-import com.javarush.lesson13.entity.User;
+import com.javarush.lesson14.dto.UserTo;
+import com.javarush.lesson14.entity.User;
 
 
 public class Mapper {

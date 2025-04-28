@@ -1,6 +1,6 @@
-package com.javarush.lesson13.dto;
+package com.javarush.lesson14.dto;
 
-import com.javarush.lesson13.entity.Role;
+import com.javarush.lesson14.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

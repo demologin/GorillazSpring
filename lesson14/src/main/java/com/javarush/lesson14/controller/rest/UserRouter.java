@@ -1,7 +1,7 @@
-package com.javarush.lesson13.controller.rest;
+package com.javarush.lesson14.controller.rest;
 
-import com.javarush.lesson13.map.Mapper;
-import com.javarush.lesson13.repository.Repo;
+import com.javarush.lesson14.map.Mapper;
+import com.javarush.lesson14.repository.Repo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
