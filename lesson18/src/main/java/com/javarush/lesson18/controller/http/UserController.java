@@ -1,6 +1,7 @@
 package com.javarush.lesson18.controller.http;
 
-import com.javarush.lesson18.entity.User;
+import com.javarush.lesson18.entity.Role;
+import com.javarush.lesson18.dto.UserTo;
 import com.javarush.lesson18.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -25,45 +26,47 @@ public class UserController {
     public ModelAndView showAllUsers(ModelAndView view) {
         view.addObject("users", userService.findAll());
         view.setViewName("userpage");
+        view.addObject("roles", Role.values());
         return view;
     }
 
 
     @GetMapping("/{id}")
     public ModelAndView showOneUserAndUsers(ModelAndView view, @PathVariable("id") Long id) {
-        Optional<User> optionalUser = userService.get(id);
+        Optional<UserTo> optionalUser = userService.get(id);
         if (optionalUser.isPresent()) {
             view.addObject("user", optionalUser.get());
             view.addObject("users", userService.findAll());
         }
         view.setViewName("userpage");
+        view.addObject("roles", Role.values());
         return view;
     }
 
     @PostMapping()
-    public String processNewUserOrLogin(User user,
+    public String processNewUserOrLogin(UserTo userTo,
                                         HttpSession session,
                                         @RequestParam(required = false, name = "createUser") String createUser) {
         if (Objects.nonNull(createUser)) {
-            user = userService.save(user);
-            return "redirect:/users/%d".formatted(user.getId());
+            userTo = userService.save(userTo);
+            return "redirect:/users/%d".formatted(userTo.getId());
         } else {
-            log.info(" user {} login ", user);
-            session.setAttribute("currentUser", user);
+            log.info(" user {} login ", userTo);
+            session.setAttribute("currentUser", userTo);
             return "redirect:/users";
         }
     }
 
 
     @PostMapping("/{id}")
-    public String updateOrDeleteUser(User user,
+    public String updateOrDeleteUser(UserTo userTo,
                                      @RequestParam(required = false, name = "deleteUser") String deleteUser) {
         if (Objects.nonNull(deleteUser)) {
-            userService.delete(user);
+            userService.delete(userTo);
             return "redirect:/users";
         } else {
-            userService.save(user);
-            return "redirect:/users/%d".formatted(user.getId());
+            userService.save(userTo);
+            return "redirect:/users/%d".formatted(userTo.getId());
         }
     }
 }

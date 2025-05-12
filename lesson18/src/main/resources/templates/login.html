@@ -6,37 +6,35 @@
 <body>
 <div class="container">
     <span th:insert="~{fragments::menu}"></span>
-    <form th:action="@{/login}" method="post">
+
+    <form th:action="@{/login}" method="post" class="form-horizontal">
         <fieldset>
+
             <!-- Form Name -->
-            <legend>User page</legend>
+            <legend th:text="#{user_form.title}">User page</legend>
             <!-- Text input-->
             <div class="form-group">
-                <label class="col-md-4 control-label" for="login">Login</label>
+                <label class="col-md-4 control-label" for="login" th:text="#{user_form.login}">Login</label>
                 <div class="col-md-4">
-                    <input id="login" name="login" th:value="${user!=null?user.login:''}" value="user.login"
+                    <input id="login" name="login" th:value="${user!=null?user.login:'Carl'}" value="user.login"
                            type="text" placeholder="" class="form-control input-md" required="">
                 </div>
             </div>
 
             <!-- Password input-->
             <div class="form-group">
-                <label class="col-md-4 control-label" for="password">Password</label>
+                <label class="col-md-4 control-label" for="password" th:text="#{user_form.password}">Password</label>
                 <div class="col-md-4">
-                    <input id="password" name="password" th:value="${user!=null?user.password:''}" value="user.password"
+                    <input id="password" name="password" th:value="${user!=null?user.password:'admin'}" value="user.password"
                            type="password" placeholder="" class="form-control input-md"
                            required="">
                 </div>
             </div>
 
-
             <!-- Button (Double) -->
             <div class="form-group">
-                <label class="col-md-4 control-label" for="operation">Operation</label><br>
-                <span>
-            <button id="operation" name="operation" class="btn btn-primary" value="login">Login</button>
-            </span>
-
+                <label class="col-md-4 control-label" for="loginUser" th:text="#{user_form.operation}">Operation</label><br>
+                <button type="submit" id="loginUser" name="loginUser" class="btn btn-primary">Login</button>
             </div>
         </fieldset>
     </form>

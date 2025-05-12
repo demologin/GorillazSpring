@@ -1,6 +1,6 @@
 package com.javarush.lesson18.controller.rest;
 
-import com.javarush.lesson18.entity.User;
+import com.javarush.lesson18.dto.UserTo;
 import com.javarush.lesson18.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +22,13 @@ public class UserRestController {
     //READ
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<User> findAll() {
+    public List<UserTo> findAll() {
         return userService.findAll();
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{id}")
-    public User get(@PathVariable Long id) {
+    public UserTo get(@PathVariable Long id) {
         return userService
                 .get(id)
                 .orElseThrow(this::notFound);
@@ -38,7 +38,7 @@ public class UserRestController {
     //CREATE
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@RequestBody User user) {
+    public UserTo create(@RequestBody UserTo user) {
         try {
             return userService.save(user);
         } catch (Exception e) {
@@ -50,7 +50,7 @@ public class UserRestController {
     //UPDATE
     @PutMapping("/{id}") //or @PatchMapping (if only part data update)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public User update(@PathVariable Long id, @RequestBody User user) {
+    public UserTo update(@PathVariable Long id, @RequestBody UserTo user) {
         if (id.equals(user.getId()))
             return userService.save(user);
         else {

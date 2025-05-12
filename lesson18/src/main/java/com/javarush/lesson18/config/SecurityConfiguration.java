@@ -33,13 +33,13 @@ public class SecurityConfiguration {
                         .requestMatchers("/registration", "/login", "/logout")
                         .permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/users")
-                        .hasAnyAuthority(
+                        .requestMatchers("/users")
+                        .hasAnyRole(
                                 Role.USER.getAuthority(),
                                 Role.ADMIN.getAuthority())
 
                         .requestMatchers(HttpMethod.POST, "/users")
-                        .hasAnyAuthority(
+                        .hasAnyRole(
                                 Role.USER.getAuthority(),
                                 Role.ADMIN.getAuthority()
                         )
@@ -60,22 +60,21 @@ public class SecurityConfiguration {
                 .build();
     }
 
-    @Bean
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager(SecurityProperties properties,
-                                                                 ObjectProvider<PasswordEncoder> passwordEncoder) {
-        SecurityProperties.User user = properties.getUser();
-        UserDetails[] users = {
-                User.withUsername("Carl")
-                        .password("{bcrypt}$2a$10$7FAMPKijZlIvQlzFSJUqMe4BQGUXp3OzCZXFY/kboSYQ78EinaD1C")
-                        .roles("ADMIN")
-                        .build()
-        };
-        return new InMemoryUserDetailsManager(users);
-    }
+//    @Bean
+//    public InMemoryUserDetailsManager inMemoryUserDetailsManager(SecurityProperties properties,
+//                                                                 ObjectProvider<PasswordEncoder> passwordEncoder) {
+//        SecurityProperties.User user = properties.getUser();
+//        UserDetails[] users = {
+//                User.withUsername("Carl")
+//                        .password("{bcrypt}$2a$10$7FAMPKijZlIvQlzFSJUqMe4BQGUXp3OzCZXFY/kboSYQ78EinaD1C")
+//                        .roles("ADMIN")
+//                        .build()
+//        };
+//        return new InMemoryUserDetailsManager(users);
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        PasswordEncoder delegatingPasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        return delegatingPasswordEncoder;
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

@@ -7,7 +7,7 @@
 <div class="container">
     <span th:insert="~{fragments::menu}"></span>
 
-    <form action="." method="post" class="form-horizontal">
+    <form method="post" class="form-horizontal">
         <fieldset>
 
             <!-- Form Name -->
@@ -47,6 +47,21 @@
                         </span>
                 </div>
             </div>
+
+            <label for="role">Role</label>
+            <select id="role" name="role">
+                <option
+                        th:each="role: ${roles}"
+                        th:value="${role}"
+                        th:text="${role}"
+                        th:selected="${
+                        (user!=null && user.role==role) ||
+                        (user==null && role=='GUEST')
+                        }"
+                >
+                    RoleText
+                </option>
+            </select>
         </fieldset>
     </form>
 
