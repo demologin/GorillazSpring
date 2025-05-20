@@ -1,0 +1,26 @@
+#spring.liquibase.change-log=db/changelog/changelog-master.xml
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/game
+    username: postgres
+    password: postgres
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 1067619653655-qanjojv4o15kv3jur6htug6l8ea89mvt.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+          github:
+            client-id: Ov23lijRyL1bHqt9pUOo
+            client-secret: d630cea85ac245df52345ffe9a6573dd670d12e1
+            redirect-uri: http://localhost:8080/login/oauth2/code/github
+
+logging:
+  level:
+    root: INFO
+    springfox: INFO
+

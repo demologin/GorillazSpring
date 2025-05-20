@@ -2,26 +2,32 @@ package com.javarush.lesson18.config;
 
 
 import com.javarush.lesson18.entity.Role;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import com.javarush.lesson18.service.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
+    private final AuthService authService;
+
+    public SecurityConfiguration(AuthService authService) {
+        this.authService = authService;
+    }
 
 
     @Bean
@@ -54,24 +60,43 @@ public class SecurityConfiguration {
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
+                .oauth2Login(o2l -> o2l
+                        .loginPage("/login")
+                        .authorizationEndpoint(ae->ae.baseUri("/oauth"))
+                        .successHandler(getSuccessHandler())
+                )
+
                 .logout(logoutConfig -> logoutConfig
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout","GET"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessUrl("/login?logout=true"))
                 .build();
     }
 
-//    @Bean
-//    public InMemoryUserDetailsManager inMemoryUserDetailsManager(SecurityProperties properties,
-//                                                                 ObjectProvider<PasswordEncoder> passwordEncoder) {
-//        SecurityProperties.User user = properties.getUser();
-//        UserDetails[] users = {
-//                User.withUsername("Carl")
-//                        .password("{bcrypt}$2a$10$7FAMPKijZlIvQlzFSJUqMe4BQGUXp3OzCZXFY/kboSYQ78EinaD1C")
-//                        .roles("ADMIN")
-//                        .build()
-//        };
-//        return new InMemoryUserDetailsManager(users);
-//    }
+    private AuthenticationSuccessHandler getSuccessHandler() {
+        return (request, response, authentication) -> {
+            Object principal = authentication.getPrincipal();
+            DefaultOAuth2User oAuth2User = (DefaultOAuth2User) principal;
+            String login = oAuth2User.getAttributes()
+                    .entrySet()
+                    .stream()
+                    .filter(entry ->
+                            entry.getKey().equals("login")
+                            || entry.getKey().equals("email"))
+                    .map(e -> e.getValue().toString().replaceAll("@.*", ""))
+                    .findFirst()
+                    .orElseThrow();
+            UserDetails userDetails = authService.loadUserByUsername(login);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    login,
+                    userDetails.getPassword(),
+                    userDetails.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            response.sendRedirect("/users"); //OK
+        };
+    }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

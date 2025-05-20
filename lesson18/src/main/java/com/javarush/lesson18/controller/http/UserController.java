@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,16 +24,21 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping()
-    public ModelAndView showAllUsers(ModelAndView view) {
+    public ModelAndView showAllUsers(ModelAndView view, Principal principal) {
         view.addObject("users", userService.findAll());
         view.setViewName("userpage");
         view.addObject("roles", Role.values());
+        view.addObject("principalName", principal.getName());
         return view;
     }
 
 
     @GetMapping("/{id}")
-    public ModelAndView showOneUserAndUsers(ModelAndView view, @PathVariable("id") Long id) {
+    public ModelAndView showOneUserAndUsers(
+            ModelAndView view,
+            @PathVariable("id") Long id,
+            Principal principal
+    ) {
         Optional<UserTo> optionalUser = userService.get(id);
         if (optionalUser.isPresent()) {
             view.addObject("user", optionalUser.get());
@@ -40,6 +46,7 @@ public class UserController {
         }
         view.setViewName("userpage");
         view.addObject("roles", Role.values());
+        view.addObject("principalName", principal.getName());
         return view;
     }
 

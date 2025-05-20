@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:fragment="head">
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -16,7 +16,8 @@
         Language
         <a href=".?lang=en">EN</a>
         <a href=".?lang=ru">RU</a>
-        <a href="/logout">Logout</a>
+    <span sec:authorize="isAuthenticated()">
+        <a href="/logout" th:text="|Logout ${principalName}|">Logout</a>
     </span>
 
 <div th:fragment="footer">

@@ -25,7 +25,8 @@
             <div class="form-group">
                 <label class="col-md-4 control-label" for="password" th:text="#{user_form.password}">Password</label>
                 <div class="col-md-4">
-                    <input id="password" name="password" th:value="${user!=null?user.password:'admin'}" value="user.password"
+                    <input id="password" name="password" th:value="${user!=null?user.password:'admin'}"
+                           value="user.password"
                            type="password" placeholder="" class="form-control input-md"
                            required="">
                 </div>
@@ -39,6 +40,9 @@
         </fieldset>
     </form>
 
+    Login with
+    <a href="/oauth/github">GitHub</a>
+    <a href="/oauth/google">Google</a>
 
     <div th:insert="~{fragments::footer}">
         Footer
